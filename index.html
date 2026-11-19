@@ -1,121 +1,667 @@
-Create a complete and professional index.html file for my project MEDRADAR.
 
-IMPORTANT:
-Generate ONLY HTML code. Do not generate CSS or JavaScript. I will create separate style.css and script.js files.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MEDRADAR — rural healthcare access and early diagnostics platform for Kazakhstan.">
+  <title>MEDRADAR | Rural Healthcare Platform</title>
 
-Connect them correctly:
+  <link rel="stylesheet" href="style.css">
 
-* CSS: <link rel="stylesheet" href="style.css">
-* JavaScript: <script src="script.js" defer></script>
+  <!-- Map library -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  >
 
-PROJECT:
-MEDRADAR is an intelligent rural healthcare platform for Kazakhstan that improves access to early disease detection and medical diagnostics in remote villages.
+  <!-- Chart library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-DESIGN:
-Use a premium minimalist health-tech dashboard structure.
+  <script src="script.js" defer></script>
+</head>
 
-Exact color palette (CSS will use these colors):
+<body>
+<div class="app-container">
 
-* #F5F5F2 — background
-* #202725 — primary text
-* #B7D967 — lime accent
-* #A5B3AA — secondary accent
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">✚</div>
+      <div>
+        <h2>MEDRADAR</h2>
+        <span>RURAL HEALTHCARE</span>
+      </div>
+    </div>
 
-The HTML structure must include:
+    <div class="sidebar-label">WORKSPACE</div>
 
-1. SIDEBAR
+    <nav class="navigation" aria-label="Main navigation">
+      <a href="#overview" class="nav-link active" data-section="overview">▦ Overview</a>
+      <a href="#rapid-lab" class="nav-link" data-section="rapid-lab">◈ RAPID LAB</a>
+      <a href="#ai-radar" class="nav-link" data-section="ai-radar">⌁ AI HEALTH RADAR</a>
+      <a href="#medmobile" class="nav-link" data-section="medmobile">⌖ MEDMOBILE</a>
+      <a href="#health-passport" class="nav-link" data-section="health-passport">▤ HEALTH PASSPORT</a>
+    </nav>
 
-* MEDRADAR logo.
-* Overview.
-* RAPID LAB.
-* AI HEALTH RADAR.
-* MEDMOBILE.
-* HEALTH PASSPORT.
-* Smart Referrals.
-* Preventive Care.
-* Patient Journey.
-* Closed-Loop Care.
-* Doctor Dashboard.
-* Patient Dashboard.
-* Language selector: EN / RU / KZ.
+    <div class="sidebar-label">CARE MANAGEMENT</div>
 
-2. TOP HEADER
+    <nav class="navigation" aria-label="Care management">
+      <a href="#referrals" class="nav-link" data-section="referrals">↗ Smart Referrals</a>
+      <a href="#preventive-care" class="nav-link" data-section="preventive-care">♡ Preventive Care</a>
+      <a href="#patient-journey" class="nav-link" data-section="patient-journey">⇢ Patient Journey</a>
+      <a href="#closed-loop" class="nav-link" data-section="closed-loop">⟳ Closed-Loop Care</a>
+    </nav>
 
-* Search field.
-* Notifications.
-* User profile.
-* Current page title.
+    <div class="sidebar-label">DASHBOARDS</div>
 
-3. OVERVIEW DASHBOARD
+    <nav class="navigation" aria-label="Dashboards">
+      <a href="#doctor-dashboard" class="nav-link" data-section="doctor-dashboard">♙ Doctor Dashboard</a>
+      <a href="#patient-dashboard" class="nav-link" data-section="patient-dashboard">♧ Patient Dashboard</a>
+    </nav>
 
-* 80 connected villages.
-* 20 medical clusters.
-* 90 km average distance to hospital.
-* 15-minute target for selected rapid tests.
-* Analytics chart container.
-* Recent activity section.
-* Patient overview table.
+    <div class="sidebar-bottom">
+      <label for="languageSelect">LANGUAGE</label>
+      <select id="languageSelect">
+        <option value="en">English</option>
+        <option value="ru">Русский</option>
+        <option value="kz">Қазақша</option>
+      </select>
 
-4. RAPID LAB SECTION
+      <div class="sidebar-status">
+        <span class="status-dot"></span>
+        System demonstration mode
+      </div>
+    </div>
+  </aside>
 
-* Sample registration form.
-* Patient information fields.
-* Test selection.
-* Timer display.
-* Demonstration test results.
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
 
-5. AI HEALTH RADAR SECTION
+    <!-- HEADER -->
+    <header class="topbar">
+      <div class="mobile-brand">MEDRADAR</div>
 
-* Age input.
-* Symptoms selection.
-* Family history.
-* Previous examination information.
-* Risk assessment button.
-* Results area with Low, Medium and High risk categories.
-* Clear disclaimer that this is a simulation, not a medical diagnosis.
+      <div class="search-wrapper">
+        <label for="globalSearch" class="visually-hidden">Search platform</label>
+        <input
+          type="search"
+          id="globalSearch"
+          placeholder="Search patients, villages, records..."
+        >
+        <span>⌕</span>
+      </div>
 
-6. MEDMOBILE SECTION
+      <div class="topbar-actions">
+        <button type="button" class="icon-button" id="notificationButton" aria-label="Notifications">♧</button>
+        <div class="user-profile">
+          <div class="avatar">DR</div>
+          <div>
+            <strong>Demo Doctor</strong>
+            <span>Medical specialist</span>
+          </div>
+        </div>
+      </div>
+    </header>
 
-* Interactive map container with id=“map”.
-* Village information.
-* Cluster information.
-* Mobile team schedule.
+    <!-- OVERVIEW -->
+    <section class="page-section active" id="overview">
+      <div class="page-heading">
+        <div>
+          <span class="eyebrow">RURAL HEALTHCARE INTELLIGENCE</span>
+          <h1>Overview</h1>
+          <p>Healthcare access, diagnostics and medical coordination across rural Kazakhstan.</p>
+        </div>
+        <div class="date-label" id="currentDate">Platform overview</div>
+      </div>
 
-7. HEALTH PASSPORT SECTION
+      <div class="welcome-card">
+        <div>
+          <span class="welcome-tag">MEDRADAR NETWORK</span>
+          <h2>Healthcare closer to every village.</h2>
+          <p>Connecting local medical points, mobile teams and diagnostic services in one coordinated system.</p>
+          <a href="#medmobile" class="primary-button">Explore network <span>→</span></a>
+        </div>
+        <div class="welcome-graphic" aria-hidden="true">
+          <div class="radar-circle circle-one"></div>
+          <div class="radar-circle circle-two"></div>
+          <div class="radar-circle circle-three"></div>
+          <div class="radar-center">✚</div>
+        </div>
+      </div>
 
-* Patient profile cards.
-* Medical examination history.
-* Recommendations.
-* Next examination date.
-* QR code demonstration area.
+      <div class="section-heading">
+        <div>
+          <h2>Network performance</h2>
+          <p>Key indicators of the proposed demonstration network</p>
+        </div>
+        <span class="live-label">● DEMO DATA</span>
+      </div>
 
-8. ADDITIONAL MODULES
+      <div class="stats-grid">
+        <article class="stat-card">
+          <span class="stat-icon">⌖</span>
+          <span class="stat-label">Connected villages</span>
+          <strong>80</strong>
+          <span class="stat-note">Across the proposed network</span>
+        </article>
 
-* Smart Referrals.
-* Preventive Care.
-* Patient Journey.
-* Closed-Loop Care.
-* Doctor Dashboard.
-* Patient Dashboard.
+        <article class="stat-card">
+          <span class="stat-icon">▦</span>
+          <span class="stat-label">Medical clusters</span>
+          <strong>20</strong>
+          <span class="stat-note">Organized service zones</span>
+        </article>
 
-TECHNICAL REQUIREMENTS:
+        <article class="stat-card">
+          <span class="stat-icon">↗</span>
+          <span class="stat-label">Average distance</span>
+          <strong>90 <small>km</small></strong>
+          <span class="stat-note">Illustrative distance to hospital</span>
+        </article>
 
-* Use semantic HTML5.
-* Use unique IDs for interactive elements.
-* Use accessible labels for forms.
-* Use reusable CSS classes.
-* Include responsive viewport metadata.
-* Include containers for JavaScript-generated content.
-* Add navigation links or buttons for all modules.
-* Ensure all sections have matching IDs for navigation.
-* Prepare containers for Chart.js and Leaflet.
-* Include a visible disclaimer about fictional demonstration data.
+        <article class="stat-card accent-stat">
+          <span class="stat-icon">◷</span>
+          <span class="stat-label">Rapid test target</span>
+          <strong>15 <small>min</small></strong>
+          <span class="stat-note">Selected tests only</span>
+        </article>
+      </div>
 
-IMPORTANT:
-Do not leave empty sections.
-Do not use placeholder text instead of actual interface structure.
-Do not put CSS or JavaScript inside this file.
-Do not use React, npm or build tools.
+      <div class="dashboard-grid">
+        <article class="panel chart-panel">
+          <div class="panel-heading">
+            <div>
+              <h3>Healthcare network analytics</h3>
+              <p>Illustrative service coverage</p>
+            </div>
+            <span class="panel-menu">•••</span>
+          </div>
+          <div class="chart-container">
+            <canvas id="analyticsChart" aria-label="Healthcare network analytics chart"></canvas>
+          </div>
+        </article>
 
-OUTPUT:
-Return the entire completed index.html code in one code block, ready to paste into GitHub.
+        <article class="panel activity-panel">
+          <div class="panel-heading">
+            <div>
+              <h3>Recent activity</h3>
+              <p>Demonstration activity feed</p>
+            </div>
+          </div>
+
+          <div class="activity-list" id="activityList">
+            <div class="activity-item">
+              <span class="activity-icon">✓</span>
+              <div><strong>Rapid Lab result recorded</strong><p>Demo Village · 10:42</p></div>
+            </div>
+            <div class="activity-item">
+              <span class="activity-icon">↗</span>
+              <div><strong>Referral created</strong><p>Cluster 04 · 10:15</p></div>
+            </div>
+            <div class="activity-item">
+              <span class="activity-icon">⌖</span>
+              <div><strong>Mobile team scheduled</strong><p>Cluster 12 · 09:30</p></div>
+            </div>
+            <div class="activity-item">
+              <span class="activity-icon">▤</span>
+              <div><strong>Health Passport updated</strong><p>Demo Patient · 09:05</p></div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <article class="panel">
+        <div class="panel-heading">
+          <div>
+            <h3>Patient overview</h3>
+            <p>Fictional records for interface demonstration</p>
+          </div>
+          <span class="live-label">SAMPLE RECORDS</span>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Patient ID</th>
+                <th>Village</th>
+                <th>Last visit</th>
+                <th>Service</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="patientTableBody">
+              <tr>
+                <td>MR-001</td><td>Demo Village A</td><td>19 Nov 2026</td><td>Rapid Lab</td><td><span class="status-badge completed">Completed</span></td>
+              </tr>
+              <tr>
+                <td>MR-002</td><td>Demo Village B</td><td>18 Nov 2026</td><td>Consultation</td><td><span class="status-badge pending">Follow-up</span></td>
+              </tr>
+              <tr>
+                <td>MR-003</td><td>Demo Village C</td><td>18 Nov 2026</td><td>Preventive care</td><td><span class="status-badge scheduled">Scheduled</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <!-- RAPID LAB -->
+    <section class="page-section" id="rapid-lab">
+      <div class="page-heading">
+        <div>
+          <span class="eyebrow">ON-SITE DIAGNOSTICS</span>
+          <h1>RAPID LAB</h1>
+          <p>Portable diagnostic services at local medical points.</p>
+        </div>
+        <span class="live-label">DEMO ENVIRONMENT</span>
+      </div>
+
+      <div class="stats-grid compact-stats">
+        <article class="stat-card"><span class="stat-label">Testing point</span><strong>25</strong><span class="stat-note">Proposed anchor FAPs</span></article>
+        <article class="stat-card"><span class="stat-label">Target processing time</span><strong>15 <small>min</small></strong><span class="stat-note">Selected rapid tests</span></article>
+        <article class="stat-card"><span class="stat-label">Digital records</span><strong>24/7</strong><span class="stat-note">Electronic result transfer concept</span></article>
+      </div>
+
+      <div class="two-column-layout">
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Register a sample</h3><p>Enter fictional demonstration information</p></div></div>
+
+          <form id="labForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="labPatientName">Patient name</label>
+                <input id="labPatientName" name="patientName" type="text" placeholder="Demo Patient" required>
+              </div>
+              <div class="form-group">
+                <label for="labPatientId">Patient ID</label>
+                <input id="labPatientId" name="patientId" type="text" placeholder="MR-004" required>
+              </div>
+              <div class="form-group">
+                <label for="labVillage">Village</label>
+                <input id="labVillage" name="village" type="text" placeholder="Demo Village" required>
+              </div>
+              <div class="form-group">
+                <label for="labTestType">Test type</label>
+                <select id="labTestType" name="testType" required>
+                  <option value="">Select a test</option>
+                  <option value="Blood glucose">Blood glucose</option>
+                  <option value="Hemoglobin">Hemoglobin</option>
+                  <option value="Cholesterol">Cholesterol</option>
+                  <option value="Other rapid test">Other rapid test</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="primary-button">Register sample →</button>
+            <p class="form-message" id="labMessage" role="status"></p>
+          </form>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Sample processing</h3><p>Demonstration timer</p></div><span class="status-badge pending" id="labTimerStatus">Ready</span></div>
+          <div class="timer-display" id="labTimer">15:00</div>
+          <p class="muted-text">Illustrative target timer for selected rapid tests. Actual processing times depend on the test and equipment.</p>
+          <button type="button" class="secondary-button" id="startLabTimer">Start demonstration timer</button>
+          <button type="button" class="text-button" id="resetLabTimer">Reset timer</button>
+        </article>
+      </div>
+
+      <article class="panel">
+        <div class="panel-heading"><div><h3>Demonstration test results</h3><p>Fictional sample results, not real patient data</p></div></div>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Sample ID</th><th>Test</th><th>Result</th><th>Processing</th><th>Status</th></tr></thead>
+            <tbody id="labResultsBody">
+              <tr><td>LAB-001</td><td>Hemoglobin</td><td>Demo value</td><td>12 min</td><td><span class="status-badge completed">Processed</span></td></tr>
+              <tr><td>LAB-002</td><td>Blood glucose</td><td>Demo value</td><td>8 min</td><td><span class="status-badge completed">Processed</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <!-- AI HEALTH RADAR -->
+    <section class="page-section" id="ai-radar">
+      <div class="page-heading">
+        <div><span class="eyebrow">DECISION SUPPORT CONCEPT</span><h1>AI HEALTH RADAR</h1><p>A demonstration of structured health information and risk prioritization.</p></div>
+        <span class="live-label">SIMULATION</span>
+      </div>
+
+      <div class="notice-card">
+        <strong>Important information</strong>
+        <p>This is an educational prototype using fictional data and simplified rules. It is not a validated medical AI system, does not diagnose diseases and must not be used to make real medical decisions. A qualified healthcare professional must assess every patient.</p>
+      </div>
+
+      <div class="two-column-layout">
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Patient information</h3><p>Fictional inputs for simulation only</p></div></div>
+
+          <form id="radarForm">
+            <div class="form-group">
+              <label for="radarAge">Age</label>
+              <input type="number" id="radarAge" min="1" max="120" placeholder="e.g. 45" required>
+            </div>
+
+            <div class="form-group">
+              <label>Symptoms (select any that apply)</label>
+              <div class="checkbox-grid">
+                <label><input type="checkbox" name="symptoms" value="Fever"> Fever</label>
+                <label><input type="checkbox" name="symptoms" value="Cough"> Cough</label>
+                <label><input type="checkbox" name="symptoms" value="Fatigue"> Fatigue</label>
+                <label><input type="checkbox" name="symptoms" value="Headache"> Headache</label>
+                <label><input type="checkbox" name="symptoms" value="Shortness of breath"> Shortness of breath</label>
+                <label><input type="checkbox" name="symptoms" value="Chest discomfort"> Chest discomfort</label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="familyHistory">Family history</label>
+              <select id="familyHistory">
+                <option value="unknown">Unknown</option>
+                <option value="none">No known family history</option>
+                <option value="yes">Relevant family history reported</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="previousExams">Previous examinations</label>
+              <select id="previousExams">
+                <option value="unknown">Not provided</option>
+                <option value="recent">Recent examination available</option>
+                <option value="none">No previous examination recorded</option>
+                <option value="followup">Follow-up recommended</option>
+              </select>
+            </div>
+
+            <button type="submit" class="primary-button">Run demo assessment →</button>
+          </form>
+        </article>
+
+        <article class="panel radar-result-panel">
+          <div class="panel-heading"><div><h3>Risk prioritization</h3><p>Illustrative output only</p></div></div>
+          <div id="radarResult" class="radar-result" aria-live="polite">
+            <div class="result-placeholder">⌁</div>
+            <h3>Waiting for information</h3>
+            <p>Complete the demonstration form to see a sample output.</p>
+          </div>
+          <div class="risk-legend">
+            <div><span class="risk-dot low"></span><strong>Low</strong><p>Routine monitoring concept</p></div>
+            <div><span class="risk-dot medium"></span><strong>Medium</strong><p>Additional review concept</p></div>
+            <div><span class="risk-dot high"></span><strong>High</strong><p>Priority professional review concept</p></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- MEDMOBILE -->
+    <section class="page-section" id="medmobile">
+      <div class="page-heading">
+        <div><span class="eyebrow">MOBILE HEALTHCARE NETWORK</span><h1>MEDMOBILE</h1><p>Coordinating mobile medical teams across remote communities.</p></div>
+        <span class="live-label">NETWORK CONCEPT</span>
+      </div>
+
+      <div class="stats-grid compact-stats">
+        <article class="stat-card"><span class="stat-label">Villages</span><strong>80</strong><span class="stat-note">Proposed coverage</span></article>
+        <article class="stat-card"><span class="stat-label">Clusters</span><strong>20</strong><span class="stat-note">Grouped service areas</span></article>
+        <article class="stat-card"><span class="stat-label">Villages per cluster</span><strong>4</strong><span class="stat-note">Illustrative average</span></article>
+      </div>
+
+      <article class="panel">
+        <div class="panel-heading"><div><h3>Medical network map</h3><p>Illustrative map — not a real dispatch or navigation system</p></div><span class="live-label">MAP DEMO</span></div>
+        <div id="map" class="map-container" role="region" aria-label="Illustrative MEDMOBILE network map"></div>
+        <p class="muted-text">Map markers and routes, if displayed, are demonstration elements and do not represent verified medical facilities.</p>
+      </article>
+
+      <div class="two-column-layout">
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Village information</h3><p>Sample network records</p></div></div>
+          <div id="villageInfo">
+            <div class="info-row"><span>Demo Village A</span><strong>Cluster 01</strong></div>
+            <div class="info-row"><span>Demo Village B</span><strong>Cluster 01</strong></div>
+            <div class="info-row"><span>Demo Village C</span><strong>Cluster 02</strong></div>
+            <div class="info-row"><span>Demo Village D</span><strong>Cluster 02</strong></div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Mobile team schedule</h3><p>Illustrative schedule</p></div></div>
+          <div id="mobileSchedule">
+            <div class="schedule-item"><span class="schedule-time">09:00</span><div><strong>Cluster 01</strong><p>Demo Village A · General screening</p></div></div>
+            <div class="schedule-item"><span class="schedule-time">11:30</span><div><strong>Cluster 02</strong><p>Demo Village C · Preventive check-up</p></div></div>
+            <div class="schedule-item"><span class="schedule-time">14:00</span><div><strong>Cluster 03</strong><p>Demo Village E · Follow-up visits</p></div></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- HEALTH PASSPORT -->
+    <section class="page-section" id="health-passport">
+      <div class="page-heading">
+        <div><span class="eyebrow">DIGITAL PATIENT RECORD</span><h1>HEALTH PASSPORT</h1><p>A coordinated digital record of visits, examinations and recommendations.</p></div>
+        <span class="live-label">FICTIONAL PROFILES</span>
+      </div>
+
+      <div class="notice-card">
+        <strong>Privacy demonstration</strong>
+        <p>All profiles and records on this page are fictional. This prototype does not store or process real medical records.</p>
+      </div>
+
+      <div class="profile-grid" id="passportProfiles">
+        <article class="profile-card">
+          <div class="avatar large-avatar">DP</div>
+          <span class="profile-id">MR-001</span>
+          <h3>Demo Patient One</h3>
+          <p>Demo Village A</p>
+          <span class="status-badge completed">Record updated</span>
+        </article>
+        <article class="profile-card">
+          <div class="avatar large-avatar">DT</div>
+          <span class="profile-id">MR-002</span>
+          <h3>Demo Patient Two</h3>
+          <p>Demo Village B</p>
+          <span class="status-badge pending">Follow-up planned</span>
+        </article>
+      </div>
+
+      <div class="two-column-layout">
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Examination history</h3><p>Sample patient record</p></div></div>
+          <div class="timeline" id="examinationHistory">
+            <div class="timeline-item"><span class="timeline-date">19 Nov 2026</span><div><strong>Rapid Lab demonstration</strong><p>Sample result added to the fictional record.</p></div></div>
+            <div class="timeline-item"><span class="timeline-date">12 Nov 2026</span><div><strong>General consultation</strong><p>Sample consultation entry.</p></div></div>
+            <div class="timeline-item"><span class="timeline-date">01 Oct 2026</span><div><strong>Preventive check-up</strong><p>Sample preventive care entry.</p></div></div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Recommendations</h3><p>Sample follow-up information</p></div></div>
+          <ul class="recommendation-list" id="passportRecommendations">
+            <li>Review examination records with a healthcare professional.</li>
+            <li>Keep scheduled appointments.</li>
+            <li>Update the record after each medical visit.</li>
+          </ul>
+          <div class="next-exam">
+            <span>Next sample examination date</span>
+            <strong>10 Dec 2026</strong>
+          </div>
+        </article>
+      </div>
+
+      <article class="panel qr-panel">
+        <div>
+          <h3>Digital access demonstration</h3>
+          <p>A QR-style placeholder for the future secure Health Passport access system.</p>
+          <span class="status-badge pending">Not connected to real patient data</span>
+        </div>
+        <div class="qr-demo" id="qrCodeDemo" aria-label="Decorative QR code demonstration">
+          <span>MED</span>
+          <small>DEMO</small>
+        </div>
+      </article>
+    </section>
+
+    <!-- SMART REFERRALS -->
+    <section class="page-section" id="referrals">
+      <div class="page-heading"><div><span class="eyebrow">COORDINATED CARE</span><h1>Smart Referrals</h1><p>Connecting local medical points with specialist services.</p></div></div>
+
+      <div class="stats-grid">
+        <article class="stat-card"><span class="stat-label">Sample referrals</span><strong>24</strong><span class="stat-note">Fictional records</span></article>
+        <article class="stat-card"><span class="stat-label">Awaiting review</span><strong>08</strong><span class="stat-note">Demonstration status</span></article>
+        <article class="stat-card"><span class="stat-label">Completed</span><strong>16</strong><span class="stat-note">Demonstration status</span></article>
+      </div>
+
+      <article class="panel">
+        <div class="panel-heading"><div><h3>Referral workflow</h3><p>Illustrative process</p></div></div>
+        <div class="workflow">
+          <div class="workflow-step"><span>01</span><strong>Local FAP</strong><p>Initial consultation</p></div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-step"><span>02</span><strong>Review</strong><p>Professional assessment</p></div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-step"><span>03</span><strong>Specialist</strong><p>Referral if required</p></div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-step"><span>04</span><strong>Follow-up</strong><p>Record updated</p></div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-heading"><div><h3>Referral records</h3><p>Fictional examples</p></div></div>
+        <div class="table-wrapper"><table><thead><tr><th>Reference</th><th>Origin</th><th>Destination</th><th>Status</th></tr></thead>
+          <tbody id="referralTableBody">
+            <tr><td>REF-001</td><td>Cluster 01</td><td>Regional hospital</td><td><span class="status-badge pending">Awaiting review</span></td></tr>
+            <tr><td>REF-002</td><td>Cluster 03</td><td>Diagnostic center</td><td><span class="status-badge completed">Completed</span></td></tr>
+          </tbody>
+        </table></div>
+      </article>
+    </section>
+
+    <!-- PREVENTIVE CARE -->
+    <section class="page-section" id="preventive-care">
+      <div class="page-heading"><div><span class="eyebrow">EARLY ACTION</span><h1>Preventive Care</h1><p>Supporting regular check-ups and continuity of care.</p></div></div>
+
+      <div class="welcome-card">
+        <div><span class="welcome-tag">PREVENTION FIRST</span><h2>Make routine care easier to access.</h2><p>Organize reminders, preventive visits and follow-up activities through local healthcare points.</p></div>
+        <div class="welcome-graphic"><div class="radar-center">♡</div></div>
+      </div>
+
+      <div class="two-column-layout">
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Preventive care checklist</h3><p>Example activities — not individual medical advice</p></div></div>
+          <div class="checklist">
+            <label><input type="checkbox"> Routine health consultation</label>
+            <label><input type="checkbox"> Review of previous examination records</label>
+            <label><input type="checkbox"> Follow-up appointment coordination</label>
+            <label><input type="checkbox"> Preventive health education</label>
+          </div>
+        </article>
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Upcoming activities</h3><p>Illustrative schedule</p></div></div>
+          <div class="schedule-item"><span class="schedule-time">20 Nov</span><div><strong>Cluster 01</strong><p>Community health information session</p></div></div>
+          <div class="schedule-item"><span class="schedule-time">22 Nov</span><div><strong>Cluster 05</strong><p>Routine screening day</p></div></div>
+          <div class="schedule-item"><span class="schedule-time">25 Nov</span><div><strong>Cluster 08</strong><p>Mobile team visit</p></div></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- PATIENT JOURNEY -->
+    <section class="page-section" id="patient-journey">
+      <div class="page-heading"><div><span class="eyebrow">FROM FIRST CONTACT TO FOLLOW-UP</span><h1>Patient Journey</h1><p>How MEDRADAR coordinates a patient's pathway through rural healthcare.</p></div></div>
+
+      <article class="panel">
+        <div class="journey">
+          <div class="journey-step"><div class="journey-number">01</div><h3>Village resident</h3><p>A resident needs a medical consultation or preventive check-up.</p></div>
+          <div class="journey-connector">↓</div>
+          <div class="journey-step"><div class="journey-number">02</div><h3>FAP or MedMobile</h3><p>A local medical point or mobile team provides initial care.</p></div>
+          <div class="journey-connector">↓</div>
+          <div class="journey-step"><div class="journey-number">03</div><h3>RAPID LAB</h3><p>Selected tests can be performed using portable diagnostic equipment.</p></div>
+          <div class="journey-connector">↓</div>
+          <div class="journey-step"><div class="journey-number">04</div><h3>Professional review</h3><p>Healthcare professionals review the available information and determine next steps.</p></div>
+          <div class="journey-connector">↓</div>
+          <div class="journey-step"><div class="journey-number">05</div><h3>Follow-up</h3><p>Results, recommendations and referrals are recorded for continuity of care.</p></div>
+        </div>
+      </article>
+    </section>
+
+    <!-- CLOSED LOOP -->
+    <section class="page-section" id="closed-loop">
+      <div class="page-heading"><div><span class="eyebrow">CONTINUITY OF CARE</span><h1>Closed-Loop Care</h1><p>Keeping referrals and follow-up connected.</p></div></div>
+
+      <div class="stats-grid">
+        <article class="stat-card"><span class="stat-label">Referral created</span><strong>01</strong><span class="stat-note">Start of care pathway</span></article>
+        <article class="stat-card"><span class="stat-label">Professional review</span><strong>02</strong><span class="stat-note">Clinical assessment stage</span></article>
+        <article class="stat-card"><span class="stat-label">Follow-up record</span><strong>03</strong><span class="stat-note">Continuity stage</span></article>
+      </div>
+
+      <article class="panel">
+        <div class="panel-heading"><div><h3>Care coordination cycle</h3><p>Example of a connected workflow</p></div></div>
+        <div class="workflow">
+          <div class="workflow-step"><span>01</span><strong>Identify need</strong><p>Local medical point</p></div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-step"><span>02</span><strong>Create referral</strong><p>Transfer information</p></div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-step"><span>03</span><strong>Record outcome</strong><p>Specialist feedback</p></div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-step"><span>04</span><strong>Follow up</strong><p>Update patient record</p></div>
+        </div>
+      </article>
+    </section>
+
+    <!-- DOCTOR DASHBOARD -->
+    <section class="page-section" id="doctor-dashboard">
+      <div class="page-heading"><div><span class="eyebrow">MEDICAL PROFESSIONAL WORKSPACE</span><h1>Doctor Dashboard</h1><p>A coordinated overview of patient activity and care tasks.</p></div></div>
+
+      <div class="stats-grid">
+        <article class="stat-card"><span class="stat-label">Sample patient records</span><strong>128</strong><span class="stat-note">Fictional dashboard data</span></article>
+        <article class="stat-card"><span class="stat-label">Pending reviews</span><strong>12</strong><span class="stat-note">Illustrative workload</span></article>
+        <article class="stat-card"><span class="stat-label">Scheduled visits</span><strong>18</strong><span class="stat-note">Illustrative schedule</span></article>
+      </div>
+
+      <article class="panel">
+        <div class="panel-heading"><div><h3>Doctor's task list</h3><p>Example coordination tasks</p></div></div>
+        <div class="task-list" id="doctorTaskList">
+          <label><input type="checkbox"> Review sample referral REF-001</label>
+          <label><input type="checkbox"> Check completed Rapid Lab records</label>
+          <label><input type="checkbox"> Review upcoming mobile team schedule</label>
+          <label><input type="checkbox"> Update fictional patient follow-up record</label>
+        </div>
+      </article>
+    </section>
+
+    <!-- PATIENT DASHBOARD -->
+    <section class="page-section" id="patient-dashboard">
+      <div class="page-heading"><div><span class="eyebrow">PATIENT WORKSPACE</span><h1>Patient Dashboard</h1><p>A simple overview of appointments and personal health records.</p></div></div>
+
+      <div class="welcome-card">
+        <div><span class="welcome-tag">WELCOME</span><h2>Your healthcare information, connected.</h2><p>View sample appointments, examination history and follow-up information in one place.</p></div>
+        <div class="welcome-graphic"><div class="radar-center">♡</div></div>
+      </div>
+
+      <div class="two-column-layout">
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Upcoming appointments</h3><p>Fictional schedule</p></div></div>
+          <div class="schedule-item"><span class="schedule-time">10 Dec</span><div><strong>Preventive check-up</strong><p>Demo FAP · 10:00</p></div></div>
+          <div class="schedule-item"><span class="schedule-time">15 Dec</span><div><strong>Follow-up consultation</strong><p>Demo medical point · 11:30</p></div></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Your digital record</h3><p>Demonstration profile</p></div></div>
+          <div class="info-row"><span>Patient ID</span><strong>MR-DEMO-01</strong></div>
+          <div class="info-row"><span>Home cluster</span><strong>Cluster 01</strong></div>
+          <div class="info-row"><span>Passport status</span><strong>Demo active</strong></div>
+          <a href="#health-passport" class="secondary-button">View Health Passport →</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-brand">MEDRADAR <span>●</span></div>
+      <p>Rural healthcare intelligence platform · Kazakhstan</p>
+      <p class="footer-disclaimer">Prototype demonstration. All displayed patient information is fictional. Not for clinical use.</p>
+    </footer>
+
+  </main>
+</div>
+</body>
+</html>
