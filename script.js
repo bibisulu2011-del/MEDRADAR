@@ -1,1482 +1,569 @@
 
-/* =========================================
-   MEDRADAR — PREMIUM HEALTHCARE DASHBOARD
-   ========================================= */
+/* ==========================================
+   MEDRADAR — INTERACTIVE PLATFORM
+   Vanilla JavaScript | GitHub Pages
+   ========================================== */
 
-/* 1. DESIGN SYSTEM */
+"use strict";
 
-:root {
-  --bg: #F5F5F2;
-  --surface: #FFFFFF;
-  --surface-soft: #F0F2ED;
-  --text: #202725;
-  --text-secondary: #78827B;
-  --lime: #B7D967;
-  --sage: #A5B3AA;
-  --dark: #202725;
-  --border: #E7EAE4;
-  --success: #5C9470;
-  --warning: #D5A64A;
-  --danger: #C66F69;
+document.addEventListener("DOMContentLoaded", () => {
 
-  --sidebar-width: 260px;
-  --radius: 18px;
-  --shadow: 0 5px 24px rgba(32, 39, 37, 0.045);
-}
+  // ==========================================
+  // 1. NAVIGATION
+  // ==========================================
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+  const sections = document.querySelectorAll(".page-section");
+  const navLinks = document.querySelectorAll(".nav-link");
 
-html {
-  scroll-behavior: smooth;
-}
+  function showSection(sectionId) {
+    const target = document.getElementById(sectionId);
 
-body {
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  font-size: 14px;
-  line-height: 1.6;
-}
+    if (!target || !target.classList.contains("page-section")) return;
 
-button,
-input,
-select {
-  font: inherit;
-}
+    sections.forEach(section => {
+      section.classList.toggle("active", section.id === sectionId);
+    });
 
-button,
-a,
-select {
-  -webkit-tap-highlight-color: transparent;
-}
+    navLinks.forEach(link => {
+      link.classList.toggle(
+        "active",
+        link.dataset.section === sectionId
+      );
+    });
 
-button {
-  cursor: pointer;
-}
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+    if (sectionId === "medmobile") {
+      setTimeout(initializeMap, 150);
+    }
 
-::selection {
-  background: var(--lime);
-  color: var(--dark);
-}
-
-/* 2. MAIN LAYOUT */
-
-.app-container {
-  min-height: 100vh;
-}
-
-.sidebar {
-  width: var(--sidebar-width);
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 100;
-  background: var(--dark);
-  color: #FFFFFF;
-  display: flex;
-  flex-direction: column;
-  padding: 30px 19px 20px;
-  overflow-y: auto;
-}
-
-.main-content {
-  margin-left: var(--sidebar-width);
-  min-height: 100vh;
-  padding: 0 38px 30px;
-  max-width: 1800px;
-}
-
-/* 3. BRAND */
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 0 7px;
-  margin-bottom: 42px;
-}
-
-.brand-icon {
-  width: 39px;
-  height: 39px;
-  border-radius: 13px;
-  background: var(--lime);
-  color: var(--dark);
-  display: grid;
-  place-items: center;
-  font-size: 22px;
-  font-weight: 800;
-}
-
-.brand h2 {
-  font-size: 18px;
-  font-weight: 750;
-  letter-spacing: -0.6px;
-}
-
-.brand span {
-  display: block;
-  color: #A5B3AA;
-  font-size: 9px;
-  letter-spacing: 1.6px;
-  margin-top: 1px;
-}
-
-.sidebar-label {
-  color: #829087;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  padding: 0 10px;
-  margin: 17px 0 10px;
-}
-
-.navigation {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.nav-link {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  color: #C0C9C1;
-  font-size: 12px;
-  font-weight: 500;
-  transition: 0.2s ease;
-}
-
-.nav-link:hover {
-  background: rgba(255,255,255,0.07);
-  color: white;
-}
-
-.nav-link.active {
-  background: var(--lime);
-  color: var(--dark);
-  font-weight: 700;
-}
-
-.sidebar-bottom {
-  margin-top: auto;
-  padding: 25px 7px 0;
-}
-
-.sidebar-bottom > label {
-  display: block;
-  font-size: 10px;
-  color: #A5B3AA;
-  margin-bottom: 8px;
-}
-
-.sidebar-bottom select {
-  width: 100%;
-  padding: 10px;
-  color: white;
-  background: #303A35;
-  border: 1px solid #46514A;
-  border-radius: 9px;
-}
-
-.sidebar-status {
-  margin-top: 19px;
-  color: #A5B3AA;
-  font-size: 10px;
-}
-
-.status-dot {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  background: var(--lime);
-  border-radius: 50%;
-  margin-right: 6px;
-}
-
-/* 4. TOP HEADER */
-
-.topbar {
-  height: 82px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--border);
-  gap: 20px;
-  margin-bottom: 35px;
-}
-
-.search-wrapper {
-  position: relative;
-  width: min(430px, 55%);
-}
-
-.search-wrapper input {
-  width: 100%;
-  height: 43px;
-  padding: 0 45px 0 16px;
-  border: 1px solid var(--border);
-  background: white;
-  border-radius: 11px;
-  outline: none;
-  color: var(--text);
-  font-size: 12px;
-  transition: 0.2s;
-}
-
-.search-wrapper input:focus {
-  border-color: var(--sage);
-  box-shadow: 0 0 0 3px rgba(165,179,170,0.15);
-}
-
-.search-wrapper span {
-  position: absolute;
-  right: 15px;
-  top: 7px;
-  color: var(--text-secondary);
-  font-size: 23px;
-}
-
-.topbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 22px;
-}
-
-.icon-button {
-  width: 38px;
-  height: 38px;
-  border-radius: 11px;
-  border: 1px solid var(--border);
-  background: white;
-  font-size: 18px;
-}
-
-.user-profile {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.avatar {
-  width: 37px;
-  height: 37px;
-  border-radius: 12px;
-  background: #DCE6D0;
-  display: grid;
-  place-items: center;
-  color: var(--dark);
-  font-weight: 700;
-  font-size: 12px;
-}
-
-.user-profile strong {
-  display: block;
-  font-size: 11px;
-}
-
-.user-profile span {
-  color: var(--text-secondary);
-  font-size: 10px;
-  display: block;
-}
-
-.mobile-brand {
-  display: none;
-}
-
-/* 5. PAGE HEADINGS */
-
-.page-section {
-  display: none;
-  animation: fadeIn 0.3s ease;
-}
-
-.page-section.active {
-  display: block;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(7px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.page-heading {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 27px;
-}
-
-.eyebrow {
-  color: #829087;
-  font-size: 9px;
-  font-weight: 750;
-  letter-spacing: 1.8px;
-}
-
-.page-heading h1 {
-  font-size: clamp(27px, 3vw, 36px);
-  letter-spacing: -1.4px;
-  line-height: 1.2;
-  margin: 7px 0;
-  font-weight: 750;
-}
-
-.page-heading p {
-  color: var(--text-secondary);
-  font-size: 12px;
-}
-
-.date-label {
-  background: white;
-  border: 1px solid var(--border);
-  padding: 9px 14px;
-  border-radius: 10px;
-  color: var(--text-secondary);
-  font-size: 11px;
-}
-
-.live-label {
-  background: #EDF3E3;
-  color: #607D43;
-  padding: 6px 10px;
-  border-radius: 7px;
-  font-size: 9px;
-  font-weight: 750;
-  letter-spacing: 0.7px;
-  white-space: nowrap;
-}
-
-/* 6. WELCOME CARD */
-
-.welcome-card {
-  min-height: 220px;
-  background: var(--dark);
-  border-radius: 21px;
-  padding: 35px 38px;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 35px;
-}
-
-.welcome-card > div:first-child {
-  max-width: 520px;
-  position: relative;
-  z-index: 2;
-}
-
-.welcome-tag {
-  display: inline-block;
-  color: var(--lime);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 1.7px;
-  margin-bottom: 12px;
-}
-
-.welcome-card h2 {
-  font-size: clamp(24px, 3vw, 34px);
-  letter-spacing: -1px;
-  line-height: 1.25;
-  margin-bottom: 12px;
-}
-
-.welcome-card p {
-  max-width: 430px;
-  color: #B8C2BA;
-  font-size: 12px;
-  line-height: 1.8;
-  margin-bottom: 21px;
-}
-
-.primary-button {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  gap: 13px;
-  background: var(--lime);
-  color: var(--dark);
-  border: none;
-  border-radius: 9px;
-  padding: 12px 18px;
-  font-weight: 750;
-  font-size: 11px;
-  transition: 0.2s ease;
-}
-
-.primary-button:hover {
-  background: #C9E786;
-  transform: translateY(-2px);
-}
-
-.welcome-graphic {
-  width: 210px;
-  height: 180px;
-  flex-shrink: 0;
-  position: relative;
-  display: grid;
-  place-items: center;
-}
-
-.radar-circle {
-  position: absolute;
-  border: 1px solid rgba(183,217,103,0.35);
-  border-radius: 50%;
-}
-
-.circle-one {
-  width: 75px;
-  height: 75px;
-}
-
-.circle-two {
-  width: 125px;
-  height: 125px;
-}
-
-.circle-three {
-  width: 175px;
-  height: 175px;
-}
-
-.radar-center {
-  width: 52px;
-  height: 52px;
-  display: grid;
-  place-items: center;
-  background: var(--lime);
-  color: var(--dark);
-  border-radius: 17px;
-  font-size: 25px;
-  font-weight: 800;
-  z-index: 1;
-}
-
-/* 7. SECTION HEADINGS */
-
-.section-heading,
-.panel-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-}
-
-.section-heading {
-  margin-bottom: 17px;
-}
-
-.section-heading h2 {
-  font-size: 18px;
-  letter-spacing: -0.5px;
-}
-
-.section-heading p,
-.panel-heading p {
-  color: var(--text-secondary);
-  font-size: 11px;
-  margin-top: 3px;
-}
-
-.section-heading .live-label {
-  flex-shrink: 0;
-}
-
-/* 8. STAT CARDS */
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 15px;
-  margin-bottom: 27px;
-}
-
-.stat-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-  position: relative;
-  min-width: 0;
-  box-shadow: var(--shadow);
-  transition: 0.2s;
-}
-
-.stat-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(32,39,37,0.07);
-}
-
-.stat-icon {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: #EDF2E7;
-  color: #617B4D;
-  font-size: 17px;
-  margin-bottom: 15px;
-}
-
-.stat-label {
-  display: block;
-  color: var(--text-secondary);
-  font-size: 10px;
-  font-weight: 550;
-}
-
-.stat-card strong {
-  display: block;
-  font-size: 29px;
-  letter-spacing: -1.2px;
-  margin: 3px 0;
-  line-height: 1.3;
-}
-
-.stat-card strong small {
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0;
-}
-
-.stat-note {
-  color: #929B94;
-  font-size: 9px;
-}
-
-.accent-stat {
-  background: #EEF3E5;
-  border-color: #E1E9D5;
-}
-
-/* 9. PANELS AND GRIDS */
-
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 18px;
-  margin-bottom: 20px;
-}
-
-.two-column-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-  margin-bottom: 20px;
-}
-
-.panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 23px;
-  margin-bottom: 20px;
-  box-shadow: var(--shadow);
-  min-width: 0;
-}
-
-.panel-heading {
-  margin-bottom: 20px;
-}
-
-.panel-heading h3 {
-  font-size: 14px;
-  letter-spacing: -0.3px;
-}
-
-.panel-menu {
-  color: var(--text-secondary);
-  letter-spacing: 3px;
-}
-
-.chart-container {
-  position: relative;
-  height: 240px;
-  width: 100%;
-}
-
-.activity-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.activity-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 13px 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.activity-item:last-child {
-  border-bottom: none;
-}
-
-.activity-icon {
-  width: 31px;
-  height: 31px;
-  display: grid;
-  place-items: center;
-  background: #EDF2E7;
-  color: #667D4F;
-  border-radius: 10px;
-  flex-shrink: 0;
-}
-
-.activity-item strong {
-  font-size: 11px;
-  display: block;
-}
-
-.activity-item p {
-  font-size: 10px;
-  color: var(--text-secondary);
-  margin-top: 3px;
-}
-
-/* 10. TABLES */
-
-.table-wrapper {
-  overflow-x: auto;
-  width: 100%;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  white-space: nowrap;
-}
-
-th {
-  padding: 12px 14px;
-  color: #8A948D;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.7px;
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--border);
-}
-
-td {
-  padding: 15px 14px;
-  font-size: 11px;
-  border-bottom: 1px solid #F0F1ED;
-}
-
-tbody tr:hover {
-  background: #FAFBF8;
-}
-
-tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.status-badge {
-  display: inline-block;
-  padding: 5px 9px;
-  border-radius: 6px;
-  font-size: 9px;
-  font-weight: 700;
-}
-
-.completed {
-  color: #4E8762;
-  background: #EAF3EB;
-}
-
-.pending {
-  color: #A57A36;
-  background: #F8F0DF;
-}
-
-.scheduled {
-  color: #637D91;
-  background: #EAF0F4;
-}
-
-/* 11. FORMS */
-
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.form-group {
-  margin-bottom: 17px;
-}
-
-.form-group > label {
-  display: block;
-  font-size: 11px;
-  font-weight: 650;
-  margin-bottom: 8px;
-}
-
-.form-group input,
-.form-group select,
-.sidebar-bottom select {
-  font-family: inherit;
-}
-
-.form-group input,
-.form-group select {
-  width: 100%;
-  height: 43px;
-  padding: 0 12px;
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  background: #FCFCFA;
-  color: var(--text);
-  outline: none;
-  font-size: 11px;
-  transition: 0.2s;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-  border-color: var(--sage);
-  box-shadow: 0 0 0 3px rgba(165,179,170,0.13);
-}
-
-.form-group input::placeholder {
-  color: #A6AEA8;
-}
-
-.form-message {
-  color: var(--success);
-  font-size: 11px;
-  margin-top: 12px;
-}
-
-.secondary-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 11px 15px;
-  border-radius: 9px;
-  background: #EDF2E7;
-  color: #4F6840;
-  border: 1px solid #E0E9D5;
-  font-size: 11px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.secondary-button:hover {
-  background: #E4EDD8;
-}
-
-.text-button {
-  background: none;
-  border: none;
-  color: var(--text-secondary);
-  font-size: 11px;
-  margin-left: 12px;
-}
-
-.muted-text {
-  font-size: 10px;
-  color: var(--text-secondary);
-  margin: 15px 0;
-  line-height: 1.7;
-}
-
-/* 12. RAPID LAB TIMER */
-
-.timer-display {
-  font-size: 54px;
-  font-weight: 750;
-  letter-spacing: -3px;
-  text-align: center;
-  padding: 20px;
-  color: var(--dark);
-  background: #F0F3EA;
-  border-radius: 15px;
-  font-variant-numeric: tabular-nums;
-}
-
-.compact-stats .stat-card {
-  padding: 18px 20px;
-}
-
-/* 13. AI RADAR */
-
-.notice-card {
-  background: #EEF3E7;
-  border: 1px solid #DFE8D5;
-  border-left: 4px solid var(--lime);
-  border-radius: 12px;
-  padding: 17px 20px;
-  margin-bottom: 20px;
-}
-
-.notice-card strong {
-  font-size: 12px;
-}
-
-.notice-card p {
-  color: #667268;
-  font-size: 11px;
-  line-height: 1.7;
-  margin-top: 5px;
-}
-
-.checkbox-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.checkbox-grid label,
-.checklist label,
-.task-list label {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  color: var(--text-secondary);
-  font-size: 11px;
-  cursor: pointer;
-}
-
-input[type="checkbox"] {
-  accent-color: #819C5D;
-  width: 15px;
-  height: 15px;
-}
-
-.radar-result {
-  text-align: center;
-  padding: 25px 10px;
-  min-height: 210px;
-}
-
-.result-placeholder {
-  width: 65px;
-  height: 65px;
-  border-radius: 20px;
-  background: #EDF2E7;
-  display: grid;
-  place-items: center;
-  margin: 0 auto 15px;
-  font-size: 30px;
-  color: #708B54;
-}
-
-.radar-result h3 {
-  font-size: 15px;
-  margin-bottom: 6px;
-}
-
-.radar-result p {
-  color: var(--text-secondary);
-  font-size: 11px;
-}
-
-.risk-legend {
-  border-top: 1px solid var(--border);
-  padding-top: 17px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-.risk-legend strong {
-  display: block;
-  font-size: 10px;
-}
-
-.risk-legend p {
-  color: var(--text-secondary);
-  font-size: 9px;
-  margin-top: 4px;
-}
-
-.risk-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  margin-right: 5px;
-}
-
-.risk-dot.low {
-  background: var(--success);
-}
-
-.risk-dot.medium {
-  background: var(--warning);
-}
-
-.risk-dot.high {
-  background: var(--danger);
-}
-
-/* 14. MEDMOBILE MAP */
-
-.map-container {
-  height: 380px;
-  width: 100%;
-  border-radius: 13px;
-  background: #E8EDE5;
-  overflow: hidden;
-  z-index: 1;
-}
-
-.info-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  padding: 13px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 11px;
-}
-
-.info-row:last-child {
-  border-bottom: none;
-}
-
-.info-row span {
-  color: var(--text-secondary);
-}
-
-.info-row strong {
-  font-size: 11px;
-}
-
-.schedule-item {
-  display: flex;
-  gap: 15px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.schedule-item:last-child {
-  border-bottom: none;
-}
-
-.schedule-time {
-  color: #71884F;
-  font-size: 11px;
-  font-weight: 750;
-  min-width: 48px;
-}
-
-.schedule-item strong {
-  display: block;
-  font-size: 11px;
-}
-
-.schedule-item p {
-  color: var(--text-secondary);
-  font-size: 10px;
-  margin-top: 3px;
-}
-
-/* 15. HEALTH PASSPORT */
-
-.profile-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-.profile-card {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 22px;
-  box-shadow: var(--shadow);
-}
-
-.large-avatar {
-  width: 55px;
-  height: 55px;
-  font-size: 17px;
-  border-radius: 17px;
-  margin-bottom: 15px;
-}
-
-.profile-id {
-  display: block;
-  font-size: 9px;
-  color: #829087;
-  letter-spacing: 1px;
-  margin-bottom: 5px;
-}
-
-.profile-card h3 {
-  font-size: 15px;
-}
-
-.profile-card p {
-  color: var(--text-secondary);
-  font-size: 11px;
-  margin: 4px 0 13px;
-}
-
-.timeline {
-  border-left: 2px solid #E3EBDD;
-  margin-left: 6px;
-  padding-left: 20px;
-}
-
-.timeline-item {
-  position: relative;
-  padding: 0 0 24px;
-}
-
-.timeline-item::before {
-  content: "";
-  position: absolute;
-  left: -27px;
-  top: 4px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--lime);
-  border: 2px solid white;
-  box-shadow: 0 0 0 1px #DAE4D1;
-}
-
-.timeline-date {
-  display: block;
-  color: #829087;
-  font-size: 9px;
-  margin-bottom: 4px;
-}
-
-.timeline-item strong {
-  font-size: 11px;
-}
-
-.timeline-item p {
-  color: var(--text-secondary);
-  font-size: 10px;
-  margin-top: 3px;
-}
-
-.recommendation-list {
-  list-style: none;
-}
-
-.recommendation-list li {
-  position: relative;
-  padding: 11px 0 11px 22px;
-  font-size: 11px;
-  color: var(--text-secondary);
-  border-bottom: 1px solid var(--border);
-}
-
-.recommendation-list li::before {
-  content: "✓";
-  position: absolute;
-  left: 0;
-  color: #78934E;
-  font-weight: 800;
-}
-
-.next-exam {
-  margin-top: 20px;
-  padding: 15px;
-  border-radius: 11px;
-  background: #F0F3EA;
-}
-
-.next-exam span {
-  display: block;
-  color: var(--text-secondary);
-  font-size: 10px;
-}
-
-.next-exam strong {
-  display: block;
-  font-size: 17px;
-  margin-top: 5px;
-}
-
-.qr-panel {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 25px;
-}
-
-.qr-panel h3 {
-  font-size: 14px;
-}
-
-.qr-panel p {
-  color: var(--text-secondary);
-  font-size: 11px;
-  margin: 7px 0 12px;
-}
-
-.qr-demo {
-  width: 105px;
-  height: 105px;
-  flex-shrink: 0;
-  border: 8px solid #202725;
-  background:
-    repeating-conic-gradient(#202725 0% 25%, white 0% 50%)
-    0 0 / 13px 13px;
-  display: grid;
-  place-content: center;
-  text-align: center;
-  color: var(--lime);
-  font-weight: 800;
-}
-
-.qr-demo span {
-  background: var(--dark);
-  padding: 3px;
-  font-size: 13px;
-}
-
-.qr-demo small {
-  background: var(--dark);
-  font-size: 8px;
-}
-
-/* 16. WORKFLOW AND JOURNEY */
-
-.workflow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.workflow-step {
-  flex: 1;
-  min-width: 110px;
-  background: #F5F7F1;
-  border: 1px solid #E7EDE0;
-  border-radius: 13px;
-  padding: 16px;
-}
-
-.workflow-step > span {
-  display: inline-grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  background: var(--lime);
-  color: var(--dark);
-  border-radius: 8px;
-  font-size: 10px;
-  font-weight: 800;
-  margin-bottom: 12px;
-}
-
-.workflow-step strong {
-  display: block;
-  font-size: 11px;
-}
-
-.workflow-step p {
-  color: var(--text-secondary);
-  font-size: 9px;
-  margin-top: 5px;
-}
-
-.workflow-arrow {
-  color: #9BA99B;
-  font-size: 19px;
-}
-
-.journey {
-  max-width: 650px;
-  margin: 0 auto;
-}
-
-.journey-step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  background: #F5F7F1;
-  border: 1px solid #E5EBDE;
-  padding: 22px;
-  border-radius: 14px;
-}
-
-.journey-number {
-  width: 35px;
-  height: 35px;
-  display: grid;
-  place-items: center;
-  background: var(--lime);
-  border-radius: 11px;
-  font-weight: 800;
-  margin-bottom: 9px;
-}
-
-.journey-step h3 {
-  font-size: 13px;
-}
-
-.journey-step p {
-  max-width: 390px;
-  font-size: 10px;
-  color: var(--text-secondary);
-  margin-top: 5px;
-}
-
-.journey-connector {
-  text-align: center;
-  padding: 7px;
-  color: #8FA477;
-  font-size: 20px;
-}
-
-/* 17. CHECKLISTS */
-
-.checklist,
-.task-list {
-  display: flex;
-  flex-direction: column;
-  gap: 17px;
-  padding: 5px 0;
-}
-
-/* 18. FOOTER */
-
-.footer {
-  border-top: 1px solid var(--border);
-  padding: 23px 0 5px;
-  margin-top: 35px;
-  text-align: center;
-}
-
-.footer-brand {
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 1px;
-}
-
-.footer-brand span {
-  color: #8DA85D;
-}
-
-.footer p {
-  color: var(--text-secondary);
-  font-size: 10px;
-  margin-top: 5px;
-}
-
-.footer .footer-disclaimer {
-  font-size: 9px;
-  color: #A0A8A1;
-  margin-top: 9px;
-}
-
-/* 19. ACCESSIBILITY */
-
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible {
-  outline: 2px solid #8DA85D;
-  outline-offset: 3px;
-}
-
-/* 20. RESPONSIVE TABLETS */
-
-@media (max-width: 1100px) {
-  :root {
-    --sidebar-width: 220px;
+    if (sectionId === "overview") {
+      setTimeout(initializeChart, 100);
+    }
   }
 
-  .main-content {
-    padding: 0 23px 25px;
+  navLinks.forEach(link => {
+    link.addEventListener("click", event => {
+      event.preventDefault();
+      const id = link.dataset.section;
+      showSection(id);
+      history.replaceState(null, "", `#${id}`);
+    });
+  });
+
+  // Handle links elsewhere on the page.
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener("click", event => {
+      const id = link.getAttribute("href").slice(1);
+      const target = document.getElementById(id);
+
+      if (target && target.classList.contains("page-section")) {
+        event.preventDefault();
+        showSection(id);
+        history.replaceState(null, "", `#${id}`);
+      }
+    });
+  });
+
+  const initialSection = location.hash.slice(1);
+  if (initialSection && document.getElementById(initialSection)?.classList.contains("page-section")) {
+    showSection(initialSection);
+  } else {
+    showSection("overview");
   }
 
-  .stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  // ==========================================
+  // 2. CURRENT DATE
+  // ==========================================
+
+  const dateElement = document.getElementById("currentDate");
+
+  if (dateElement) {
+    dateElement.textContent = new Intl.DateTimeFormat("en", {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    }).format(new Date());
   }
 
-  .dashboard-grid {
-    grid-template-columns: 1fr;
+  // ==========================================
+  // 3. OVERVIEW CHART
+  // ==========================================
+
+  let analyticsChart = null;
+
+  function initializeChart() {
+    const canvas = document.getElementById("analyticsChart");
+
+    if (!canvas || !window.Chart || analyticsChart) return;
+
+    analyticsChart = new Chart(canvas, {
+      type: "line",
+      data: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        datasets: [
+          {
+            label: "Illustrative village coverage",
+            data: [35, 42, 48, 57, 68, 80],
+            borderColor: "#829D5B",
+            backgroundColor: "rgba(183,217,103,0.18)",
+            fill: true,
+            tension: 0.4,
+            borderWidth: 3,
+            pointRadius: 4,
+            pointBackgroundColor: "#B7D967"
+          },
+          {
+            label: "Illustrative medical clusters",
+            data: [5, 7, 9, 12, 16, 20],
+            borderColor: "#A5B3AA",
+            backgroundColor: "rgba(165,179,170,0.08)",
+            fill: false,
+            tension: 0.4,
+            borderWidth: 2,
+            pointRadius: 3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: "bottom",
+            labels: {
+              usePointStyle: true,
+              boxWidth: 7,
+              padding: 18,
+              font: { size: 10 }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: "#EDF0EA" },
+            ticks: { font: { size: 10 } }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { font: { size: 10 } }
+          }
+        }
+      }
+    });
   }
 
-  .workflow {
-    justify-content: center;
-  }
-}
+  initializeChart();
 
-/* 21. RESPONSIVE MOBILE */
+  // ==========================================
+  // 4. RAPID LAB FORM
+  // ==========================================
 
-@media (max-width: 760px) {
-  :root {
-    --sidebar-width: 0px;
-  }
+  const labForm = document.getElementById("labForm");
+  const labMessage = document.getElementById("labMessage");
+  const labResultsBody = document.getElementById("labResultsBody");
 
-  .sidebar {
-    display: none;
-  }
+  let sampleCounter = 3;
 
-  .main-content {
-    margin-left: 0;
-    padding: 0 16px 25px;
-  }
+  if (labForm) {
+    labForm.addEventListener("submit", event => {
+      event.preventDefault();
 
-  .topbar {
-    height: auto;
-    min-height: 70px;
-    flex-wrap: wrap;
-    padding: 13px 0;
-    margin-bottom: 25px;
-  }
+      const name = document.getElementById("labPatientName").value.trim();
+      const patientId = document.getElementById("labPatientId").value.trim();
+      const village = document.getElementById("labVillage").value.trim();
+      const test = document.getElementById("labTestType").value;
 
-  .mobile-brand {
-    display: block;
-    font-size: 17px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-  }
+      if (!name || !patientId || !village || !test) {
+        labMessage.textContent = "Please complete all fields.";
+        return;
+      }
 
-  .search-wrapper {
-    order: 3;
-    width: 100%;
-  }
+      const sampleId = `LAB-${String(sampleCounter++).padStart(3, "0")}`;
 
-  .topbar-actions {
-    gap: 10px;
-  }
+      const row = document.createElement("tr");
 
-  .user-profile > div:last-child {
-    display: none;
-  }
+      [
+        sampleId,
+        test,
+        "Awaiting professional review",
+        "Not started",
+        "Registered"
+      ].forEach((value, index) => {
+        const cell = document.createElement("td");
+        cell.textContent = value;
 
-  .page-heading {
-    align-items: flex-start;
-    flex-direction: column;
-  }
+        if (index === 4) {
+          const badge = document.createElement("span");
+          badge.className = "status-badge scheduled";
+          badge.textContent = value;
+          cell.textContent = "";
+          cell.appendChild(badge);
+        }
 
-  .welcome-card {
-    padding: 25px;
-    min-height: 210px;
-  }
+        row.appendChild(cell);
+      });
 
-  .welcome-graphic {
-    display: none;
-  }
+      if (labResultsBody) {
+        labResultsBody.prepend(row);
+      }
 
-  .stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+      labMessage.textContent =
+        `${sampleId} registered for ${name} (${patientId}) at ${village}. Demo record only.`;
+
+      labForm.reset();
+    });
   }
 
-  .stat-card {
-    padding: 15px;
+  // ==========================================
+  // 5. RAPID LAB TIMER
+  // ==========================================
+
+  const timerDisplay = document.getElementById("labTimer");
+  const startTimerButton = document.getElementById("startLabTimer");
+  const resetTimerButton = document.getElementById("resetLabTimer");
+  const timerStatus = document.getElementById("labTimerStatus");
+
+  let timerSeconds = 15 * 60;
+  let timerInterval = null;
+
+  function updateTimerDisplay() {
+    if (!timerDisplay) return;
+
+    const minutes = Math.floor(timerSeconds / 60);
+    const seconds = timerSeconds % 60;
+
+    timerDisplay.textContent =
+      `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   }
 
-  .stat-card strong {
-    font-size: 25px;
+  if (startTimerButton) {
+    startTimerButton.addEventListener("click", () => {
+      if (timerInterval) return;
+
+      if (timerSeconds <= 0) timerSeconds = 15 * 60;
+
+      if (timerStatus) timerStatus.textContent = "Running";
+
+      timerInterval = setInterval(() => {
+        timerSeconds--;
+        updateTimerDisplay();
+
+        if (timerSeconds <= 0) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+
+          if (timerStatus) timerStatus.textContent = "Complete";
+        }
+      }, 1000);
+    });
   }
 
-  .two-column-layout,
-  .profile-grid {
-    grid-template-columns: 1fr;
+  if (resetTimerButton) {
+    resetTimerButton.addEventListener("click", () => {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      timerSeconds = 15 * 60;
+      updateTimerDisplay();
+
+      if (timerStatus) timerStatus.textContent = "Ready";
+    });
   }
 
-  .panel {
-    padding: 17px;
+  updateTimerDisplay();
+
+  // ==========================================
+  // 6. AI HEALTH RADAR — EDUCATIONAL SIMULATION
+  // ==========================================
+
+  const radarForm = document.getElementById("radarForm");
+  const radarResult = document.getElementById("radarResult");
+
+  if (radarForm) {
+    radarForm.addEventListener("submit", event => {
+      event.preventDefault();
+
+      const age = Number(document.getElementById("radarAge").value);
+      const familyHistory = document.getElementById("familyHistory").value;
+      const previousExams = document.getElementById("previousExams").value;
+
+      const symptoms = [
+        ...document.querySelectorAll('input[name="symptoms"]:checked')
+      ].map(input => input.value);
+
+      if (!Number.isInteger(age) || age < 1 || age > 120) {
+        radarResult.innerHTML = `
+          <h3>Check the entered information</h3>
+          <p>Please enter a valid age for this demonstration.</p>
+        `;
+        return;
+      }
+
+      /*
+        This is a fictional interface demonstration.
+        It is NOT a clinically validated risk model.
+        The categories below only demonstrate UI behavior.
+      */
+
+      let points = 0;
+
+      if (age >= 65) points += 1;
+      if (familyHistory === "yes") points += 1;
+      if (previousExams === "followup") points += 1;
+      if (symptoms.length >= 2) points += 1;
+
+      let level = "Low";
+      let color = "#5C9470";
+      let explanation = "Illustrative routine information category.";
+
+      if (points >= 3) {
+        level = "High";
+        color = "#C66F69";
+        explanation = "This sample category demonstrates priority professional review.";
+      } else if (points >= 1) {
+        level = "Medium";
+        color = "#D5A64A";
+        explanation = "This sample category demonstrates additional review.";
+      }
+
+      radarResult.innerHTML = "";
+
+      const heading = document.createElement("span");
+      heading.style.cssText = `
+        display:inline-block;
+        padding:8px 14px;
+        border-radius:8px;
+        background:${color}20;
+        color:${color};
+        font-size:12px;
+        font-weight:700;
+        margin-bottom:15px;
+      `;
+      heading.textContent = `${level} · DEMO CATEGORY`;
+
+      const title = document.createElement("h3");
+      title.textContent = "Demonstration result";
+
+      const description = document.createElement("p");
+      description.textContent = explanation;
+
+      const details = document.createElement("p");
+      details.style.marginTop = "12px";
+      details.textContent =
+        `Selected symptoms: ${symptoms.length}. Age and other inputs were included in this simplified demonstration.`;
+
+      const disclaimer = document.createElement("p");
+      disclaimer.style.cssText = "margin-top:15px;font-size:10px;color:#A16B48;";
+      disclaimer.textContent =
+        "Not a diagnosis. This simulation is not validated for clinical use. Consult a qualified healthcare professional.";
+
+      radarResult.append(heading, title, description, details, disclaimer);
+    });
   }
 
-  .form-grid {
-    grid-template-columns: 1fr;
-    gap: 0;
+  // ==========================================
+  // 7. MEDMOBILE MAP
+  // ==========================================
+
+  let medMap = null;
+
+  function initializeMap() {
+    const mapElement = document.getElementById("map");
+
+    if (!mapElement || !window.L || medMap) return;
+
+    // Illustrative regional map centered on Aktobe, Kazakhstan.
+    medMap = L.map("map").setView([50.2839, 57.1670], 7);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(medMap);
+
+    const demoVillages = [
+      { name: "Demo Village A", cluster: "Cluster 01", lat: 50.35, lng: 57.30 },
+      { name: "Demo Village B", cluster: "Cluster 01", lat: 50.18, lng: 57.05 },
+      { name: "Demo Village C", cluster: "Cluster 02", lat: 50.50, lng: 56.85 },
+      { name: "Demo Village D", cluster: "Cluster 02", lat: 50.05, lng: 57.45 },
+      { name: "Demo Village E", cluster: "Cluster 03", lat: 50.65, lng: 57.50 },
+      { name: "Demo Village F", cluster: "Cluster 03", lat: 49.95, lng: 56.75 },
+      { name: "Demo Village G", cluster: "Cluster 04", lat: 50.42, lng: 57.75 },
+      { name: "Demo Village H", cluster: "Cluster 04", lat: 50.12, lng: 57.90 }
+    ];
+
+    demoVillages.forEach(village => {
+      L.marker([village.lat, village.lng])
+        .addTo(medMap)
+        .bindPopup(`
+          <strong>${village.name}</strong><br>
+          ${village.cluster}<br>
+          <small>Illustrative location — not a verified medical facility.</small>
+        `);
+    });
+
+    const centerIcon = L.divIcon({
+      className: "medradar-map-marker",
+      html: '<div style="background:#B7D967;color:#202725;padding:8px 11px;border-radius:10px;font-weight:800;border:2px solid white;">MED</div>',
+      iconSize: [50, 35],
+      iconAnchor: [25, 17]
+    });
+
+    L.marker([50.2839, 57.1670], { icon: centerIcon })
+      .addTo(medMap)
+      .bindPopup("<strong>Demo network center</strong><br>Aktobe · Illustrative marker");
+
+    setTimeout(() => medMap.invalidateSize(), 100);
   }
 
-  .workflow {
-    flex-direction: column;
+  // ==========================================
+  // 8. SEARCH
+  // ==========================================
+
+  const searchInput = document.getElementById("globalSearch");
+
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      const query = searchInput.value.toLowerCase().trim();
+
+      const searchableRows = document.querySelectorAll(
+        "tbody tr, .activity-item, .profile-card, .schedule-item, .info-row"
+      );
+
+      searchableRows.forEach(item => {
+        const matches = item.textContent.toLowerCase().includes(query);
+        item.style.display = !query || matches ? "" : "none";
+      });
+    });
   }
 
-  .workflow-step {
-    width: 100%;
+  // ==========================================
+  // 9. NOTIFICATIONS
+  // ==========================================
+
+  const notificationButton = document.getElementById("notificationButton");
+
+  if (notificationButton) {
+    notificationButton.addEventListener("click", () => {
+      alert(
+        "MEDRADAR DEMO NOTIFICATIONS\n\n" +
+        "• Sample Rapid Lab record registered\n" +
+        "• Illustrative mobile team schedule available\n" +
+        "• Demonstration referral awaiting review\n\n" +
+        "All information is fictional."
+      );
+    });
   }
 
-  .workflow-arrow {
-    transform: rotate(90deg);
+  // ==========================================
+  // 10. LANGUAGE SELECTOR
+  // ==========================================
+
+  const languageSelect = document.getElementById("languageSelect");
+
+  const translations = {
+    en: {
+      overview: "Overview",
+      rapid: "RAPID LAB",
+      radar: "AI HEALTH RADAR",
+      mobile: "MEDMOBILE",
+      passport: "HEALTH PASSPORT",
+      referrals: "Smart Referrals",
+      preventive: "Preventive Care",
+      journey: "Patient Journey",
+      closed: "Closed-Loop Care",
+      doctor: "Doctor Dashboard",
+      patient: "Patient Dashboard"
+    },
+    ru: {
+      overview: "Обзор",
+      rapid: "БЫСТРАЯ ЛАБОРАТОРИЯ",
+      radar: "ИИ РАДАР ЗДОРОВЬЯ",
+      mobile: "МЕДМОБИЛЬ",
+      passport: "ПАСПОРТ ЗДОРОВЬЯ",
+      referrals: "Направления",
+      preventive: "Профилактика",
+      journey: "Путь пациента",
+      closed: "Непрерывность помощи",
+      doctor: "Панель врача",
+      patient: "Панель пациента"
+    },
+    kz: {
+      overview: "Шолу",
+      rapid: "ЖЕДЕЛ ЗЕРТХАНА",
+      radar: "ДЕНСАУЛЫҚ РАДАРЫ",
+      mobile: "МЕДМОБИЛЬ",
+      passport: "ДЕНСАУЛЫҚ ПАСПОРТЫ",
+      referrals: "Жолдамалар",
+      preventive: "Алдын алу",
+      journey: "Пациент жолы",
+      closed: "Үздіксіз көмек",
+      doctor: "Дәрігер панелі",
+      patient: "Пациент панелі"
+    }
+  };
+
+  const translationKeys = {
+    overview: "overview",
+    "rapid-lab": "rapid",
+    "ai-radar": "radar",
+    medmobile: "mobile",
+    "health-passport": "passport",
+    referrals: "referrals",
+    "preventive-care": "preventive",
+    "patient-journey": "journey",
+    "closed-loop": "closed",
+    "doctor-dashboard": "doctor",
+    "patient-dashboard": "patient"
+  };
+
+  function changeLanguage(language) {
+    const dictionary = translations[language];
+    if (!dictionary) return;
+
+    navLinks.forEach(link => {
+      const key = translationKeys[link.dataset.section];
+      if (key) {
+        const iconAndText = link.textContent.trim().split(" ");
+        const icon = iconAndText[0];
+        link.textContent = `${icon} ${dictionary[key]}`;
+      }
+    });
+
+    const activeSection = document.querySelector(".page-section.active");
+    const title = activeSection?.querySelector(".page-heading h1");
+
+    if (title && activeSection.id === "overview") {
+      title.textContent = dictionary.overview;
+    }
   }
 
-  .risk-legend {
-    grid-template-columns: 1fr;
+  if (languageSelect) {
+    languageSelect.addEventListener("change", () => {
+      changeLanguage(languageSelect.value);
+    });
   }
 
-  .map-container {
-    height: 300px;
+  // ==========================================
+  // 11. DEMO PATIENT SEARCH / TABLE
+  // ==========================================
+
+  const patientTableBody = document.getElementById("patientTableBody");
+
+  if (patientTableBody) {
+    patientTableBody.querySelectorAll("tr").forEach(row => {
+      row.setAttribute("data-demo-record", "true");
+    });
   }
 
-  .qr-panel {
-    align-items: flex-start;
-  }
+  // ==========================================
+  // 12. CONSOLE MESSAGE
+  // ==========================================
 
-  .chart-container {
-    height: 210px;
-  }
-}
+  console.info(
+    "%cMEDRADAR",
+    "font-size:22px;font-weight:bold;color:#829D5B;"
+  );
+  console.info("Rural Healthcare Platform — demonstration mode.");
+  console.info("All patient records and simulated assessments are fictional.");
 
-/* 22. SMALL SCREENS */
-
-@media (max-width: 390px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .checkbox-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .welcome-card h2 {
-    font-size: 23px;
-  }
-
-  .timer-display {
-    font-size: 43px;
-  }
-}
+});
