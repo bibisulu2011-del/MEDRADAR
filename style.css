@@ -1,0 +1,164 @@
+Create a complete, professional and visually impressive style.css file for my MEDRADAR healthcare technology website.
+
+IMPORTANT:
+Generate ONLY CSS code. Do not generate HTML or JavaScript.
+
+The HTML file already exists as index.html. Your CSS must style its existing elements and classes. Do not invent a completely different HTML structure.
+
+1. EXACT COLOR PALETTE
+
+Use ONLY this primary design palette:
+
+* Background: #F5F5F2
+* Primary text: #202725
+* Lime accent: #B7D967
+* Secondary accent: #A5B3AA
+
+Color rules:
+
+* Light background throughout the main dashboard.
+* Dark charcoal-green sidebar.
+* Almost black-green typography.
+* Lime accents only for important statistics, buttons, active navigation, indicators and highlights.
+* Sage green for secondary information.
+* Avoid bright blue, purple, pink and excessive gradients.
+
+2. DESIGN DIRECTION
+
+Create a premium international health-tech startup dashboard.
+
+Visual references:
+
+* Modern editorial typography.
+* Large, bold headings.
+* Minimalist layouts.
+* Generous whitespace.
+* Clean grid systems.
+* Rounded cards with subtle borders.
+* Professional tables.
+* Carefully aligned icons.
+* Elegant charts.
+* Consistent spacing.
+* Smooth hover and transition effects.
+
+Avoid:
+
+* Generic hospital website appearance.
+* Excessive shadows.
+* Excessive rounded elements.
+* Overloaded layouts.
+* Tiny typography.
+* Unnecessary decorative gradients.
+
+3. SIDEBAR
+
+Style:
+
+* Dark #202725 background.
+* MEDRADAR logo in white with lime accent.
+* Light navigation text.
+* Lime active navigation indicator.
+* Smooth hover effects.
+* Fixed sidebar on desktop.
+* Collapsible navigation on mobile.
+
+4. MAIN DASHBOARD
+
+Style:
+
+* #F5F5F2 background.
+* Large page headings.
+* Minimal top navigation.
+* Search bar.
+* Profile avatar.
+* Clean statistic cards.
+* Large highlighted numbers.
+* Lime accent for key metrics.
+* Elegant charts and analytics.
+
+5. MEDICAL MODULES
+
+Create consistent styling for:
+
+* RAPID LAB.
+* AI HEALTH RADAR.
+* MEDMOBILE.
+* HEALTH PASSPORT.
+* SMART REFERRALS.
+* PREVENTIVE CARE.
+* PATIENT JOURNEY.
+* CLOSED-LOOP CARE.
+* DOCTOR DASHBOARD.
+* PATIENT DASHBOARD.
+
+Each module should have:
+
+* Clear section heading.
+* Structured cards.
+* Consistent spacing.
+* Professional forms.
+* Accessible buttons.
+* Status indicators.
+* Responsive layouts.
+
+6. INTERACTIVE ELEMENTS
+
+Style:
+
+* Primary and secondary buttons.
+* Form inputs.
+* Select menus.
+* Checkboxes.
+* Search fields.
+* Navigation links.
+* Tables.
+* Notifications.
+* Modals.
+* Tabs.
+* Progress indicators.
+* Status badges.
+* Map containers.
+* Chart containers.
+* Patient profile cards.
+
+Provide hover, focus and active states.
+
+7. RESPONSIVE DESIGN
+
+The website must work properly on:
+
+* iPad.
+* Desktop.
+* Laptop.
+* Mobile phones.
+
+Use CSS media queries.
+Ensure:
+
+* Sidebar adapts to smaller screens.
+* Cards rearrange into columns.
+* Tables remain usable.
+* Text does not overflow.
+* Buttons remain accessible.
+* Map stays responsive.
+
+8. TECHNICAL REQUIREMENTS
+
+* Use pure CSS3.
+* Use CSS variables for the color palette.
+* Use reusable class names.
+* Do not use Tailwind.
+* Do not use external paid stylesheets.
+* Do not require npm or build tools.
+* Do not use inline JavaScript.
+* Ensure compatibility with the existing index.html.
+* Do not remove or rename existing HTML classes and IDs.
+
+FINAL OUTPUT
+
+Return the COMPLETE style.css file in one code block.
+
+Do not omit styles.
+Do not provide explanations instead of code.
+Do not use placeholders.
+The CSS must be ready to paste directly into GitHub as style.css.
